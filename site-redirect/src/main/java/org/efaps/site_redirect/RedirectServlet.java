@@ -21,12 +21,16 @@
 package org.efaps.site_redirect;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -74,7 +78,17 @@ public class RedirectServlet
     {
         final String newUrl = RedirectServlet.REDIRECTS.get(_request.getServerName());
 
-        if (newUrl != null)  {
+        if ("www.efaps.org".equals(_request.getServerName())
+                && "/xsd/eFaps_1.0.xsd".equals(_request.getPathInfo()))  {
+
+            final InputStream in = this.getClass().getClassLoader().getResourceAsStream("xsd/eFaps_1.0.xsd");
+            final OutputStream out = _response.getOutputStream();
+
+            IOUtils.copy(in, out);
+
+            in.close();
+
+        } else if (newUrl != null)  {
             _response.sendRedirect(newUrl);
         } else  {
             _response.sendRedirect(RedirectServlet.DEFAULT_URL);
