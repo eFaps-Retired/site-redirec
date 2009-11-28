@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
 /**
+ * Depending on the selected sub domain the related path from eFaps in the
+ * Google Code is selected.
  *
  * @author The eFaps Team
  * @version $Id$
@@ -56,28 +58,17 @@ public class RedirectServlet
      */
     private static final Map<String, String> REDIRECTS = new HashMap<String, String>(8);
     static {
-        RedirectServlet.REDIRECTS.put("www.efaps.org",                      RedirectServlet.DEFAULT_URL);
+        RedirectServlet.REDIRECTS.put("efaps.org",                          RedirectServlet.DEFAULT_URL);
         RedirectServlet.REDIRECTS.put("source.efaps.org",                   "http://code.google.com/p/efaps/source/browse");
         RedirectServlet.REDIRECTS.put("wiki.efaps.org",                     "http://code.google.com/p/efaps/wiki");
         RedirectServlet.REDIRECTS.put("issues.efaps.org",                   "http://code.google.com/p/efaps/issues");
 
-        RedirectServlet.REDIRECTS.put("efaps-kernel.efaps.org",             "http://efaps.googlecode.com/svn/site/eFaps-kernel/index.html");
-        RedirectServlet.REDIRECTS.put("www.efaps-kernel.efaps.org",         "http://efaps.googlecode.com/svn/site/eFaps-kernel/index.html");
-
+        RedirectServlet.REDIRECTS.put("efaps-kernel.efaps.org",             "http://efaps.googlecode.com/svn/site/eFaps-Kernel/index.html");
         RedirectServlet.REDIRECTS.put("maven-efaps-jetty.efaps.org",        "http://efaps.googlecode.com/svn/site/maven-efaps-jetty/index.html");
-        RedirectServlet.REDIRECTS.put("www.maven-efaps-jetty.efaps.org",    "http://efaps.googlecode.com/svn/site/maven-efaps-jetty/index.html");
-
         RedirectServlet.REDIRECTS.put("maven-efaps-plugin.efaps.org",       "http://efaps.googlecode.com/svn/site/maven-eFaps-PlugIn/index.html");
-        RedirectServlet.REDIRECTS.put("www.maven-efaps-plugin.efaps.org",   "http://efaps.googlecode.com/svn/site/maven-eFaps-PlugIn/index.html");
-
         RedirectServlet.REDIRECTS.put("maven-java5.efaps.org",              "http://efaps.googlecode.com/svn/site/maven-java5/index.html");
-        RedirectServlet.REDIRECTS.put("www.maven-java5.efaps.org",          "http://efaps.googlecode.com/svn/site/maven-java5/index.html");
-
         RedirectServlet.REDIRECTS.put("maven-slf4jlogger.efaps.org",        "http://efaps.googlecode.com/svn/site/maven-slf4jlogger/index.html");
-        RedirectServlet.REDIRECTS.put("www.maven-slf4jlogger.efaps.org",    "http://efaps.googlecode.com/svn/site/maven-slf4jlogger/index.html");
-
         RedirectServlet.REDIRECTS.put("number2words.efaps.org",             "http://efaps.googlecode.com/svn/site/number2words/index.html");
-        RedirectServlet.REDIRECTS.put("www.number2words.efaps.org",         "http://efaps.googlecode.com/svn/site/number2words/index.html");
     }
 
     /**
@@ -90,10 +81,13 @@ public class RedirectServlet
                       final HttpServletResponse _response)
         throws IOException
     {
-        final String newUrl = RedirectServlet.REDIRECTS.get(_request.getServerName());
+        // the www. is removed...
+        final String serverName = _request.getServerName().startsWith("www.")
+                                  ? _request.getServerName().substring(4)
+                                  : _request.getServerName();
+        final String newUrl = RedirectServlet.REDIRECTS.get(serverName);
 
-        if ("www.efaps.org".equals(_request.getServerName())
-                && "/xsd/eFaps_1.0.xsd".equals(_request.getPathInfo()))  {
+        if ("efaps.org".equals(serverName) && "/xsd/eFaps_1.0.xsd".equals(_request.getPathInfo()))  {
 
             final InputStream in = this.getClass().getClassLoader().getResourceAsStream("xsd/eFaps_1.0.xsd");
             final OutputStream out = _response.getOutputStream();
