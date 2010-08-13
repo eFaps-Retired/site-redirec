@@ -69,6 +69,7 @@ public class RedirectServlet
         RedirectServlet.REDIRECTS.put("maven-java5.efaps.org",              "http://efaps.googlecode.com/svn/site/maven-java5/index.html");
         RedirectServlet.REDIRECTS.put("maven-slf4jlogger.efaps.org",        "http://efaps.googlecode.com/svn/site/maven-slf4jlogger/index.html");
         RedirectServlet.REDIRECTS.put("number2words.efaps.org",             "http://efaps.googlecode.com/svn/site/number2words/index.html");
+        RedirectServlet.REDIRECTS.put("efaps-webapp.efaps.org",             "http://efaps.googlecode.com/svn/site/eFaps-Webapp/index.html");
     }
 
     /**
